@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common';
-import { CreateItemInput } from './dto/create-item.input';
-import { UpdateItemInput } from './dto/update-item.input';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateItemInput, UpdateItemInput } from './dto/inputs';
+import { Item } from './entities/item.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ItemsService {
-  create(createItemInput: CreateItemInput) {
-    return 'This action adds a new item';
+  constructor(
+    @InjectRepository(Item)
+    private readonly _itemsRepository: Repository<Item>,
+  ) {}
+  async create(createItemInput: CreateItemInput): Promise<Item> {
+    const item = this._itemsRepository.create(createItemInput);
+    return await this._itemsRepository.save(item);
   }
 
-  findAll() {
-    return `This action returns all items`;
+  async findAll(): Promise<Item[]> {
+    return await this._itemsRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} item`;
+  async findOne(id: string): Promise<Item> {
+    const item = await this._itemsRepository.findOneBy({ id });
+    if (!item) throw new NotFoundException('Item not found');
+    return item;
   }
 
-  update(id: number, updateItemInput: UpdateItemInput) {
-    return `This action updates a #${id} item`;
+  async update(id: string, updateItemInput: UpdateItemInput): Promise<Item> {
+    const item = await this._itemsRepository.preload(updateItemInput);
+    if (!item) throw new NotFoundException('Item not found');
+    return this._itemsRepository.save(item);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} item`;
+  async remove(id: string) {
+    // TODO: soft delete implementation
+    const item = await this._itemsRepository.findOneBy({ id });
+    if (!item) throw new NotFoundException('Item not found');
+    this._itemsRepository.remove(item);
+
+    return { ...item, id };
   }
 }
