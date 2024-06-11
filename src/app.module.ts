@@ -6,6 +6,8 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { join } from 'path';
 import { ItemsModule } from './items/items.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { UsersModule } from './users/users.module';
 
 const configService = new ConfigService();
 @Module({
@@ -20,6 +22,7 @@ const configService = new ConfigService();
       database: configService.get('DB_NAME'),
       synchronize: true,
       autoLoadEntities: true,
+      namingStrategy: new SnakeNamingStrategy(),
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -29,6 +32,7 @@ const configService = new ConfigService();
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     ItemsModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

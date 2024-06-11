@@ -1,5 +1,11 @@
 import { Field, Float, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({ name: 'items' })
 @ObjectType()
@@ -19,4 +25,18 @@ export class Item {
   @Column()
   @Field(() => String, { nullable: true })
   quantityUnits?: string;
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+    name: 'created_at',
+  })
+  @Field(() => Date)
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    name: 'updated_at',
+  })
+  @Field(() => Date)
+  updatedAt: Date;
 }
