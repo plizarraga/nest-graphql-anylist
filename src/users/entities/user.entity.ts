@@ -1,4 +1,4 @@
-import { Field, Float, ObjectType } from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -7,24 +7,40 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'items' })
+@Entity({
+  name: 'users',
+})
 @ObjectType()
-export class Item {
+export class User {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => String)
   id: string;
 
   @Column()
   @Field(() => String)
-  name: string;
+  fullName: string;
+
+  @Column({ unique: true })
+  @Field(() => String)
+  email: string;
 
   @Column()
-  @Field(() => Float)
-  quantity: number;
+  password: string;
 
-  @Column()
-  @Field(() => String, { nullable: true })
-  quantityUnits?: string;
+  @Column({
+    type: 'text',
+    array: true,
+    default: ['user'],
+  })
+  @Field(() => [String])
+  roles: string[];
+
+  @Column({
+    type: 'boolean',
+    default: true,
+  })
+  @Field(() => Boolean)
+  isActive: boolean;
 
   @CreateDateColumn({
     type: 'timestamptz',

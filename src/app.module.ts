@@ -8,6 +8,7 @@ import { ItemsModule } from './items/items.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 const configService = new ConfigService();
 @Module({
@@ -33,6 +34,7 @@ const configService = new ConfigService();
     }),
     ItemsModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
