@@ -3,6 +3,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -56,5 +58,12 @@ export class User {
   @Field(() => Date)
   updatedAt: Date;
 
-  // TODO: Add relationships
+  // Many-to-one relationships
+  @ManyToOne(() => User, (user) => user.lastUpdateBy, {
+    nullable: true,
+    lazy: true,
+  })
+  @JoinColumn({ name: 'last_update_by' })
+  @Field(() => User, { nullable: true })
+  lastUpdateBy?: User;
 }
