@@ -22,7 +22,7 @@ export const CurrentUser = createParamDecorator(
     if (roles.length === 0) return user;
 
     for (const role of user.roles) {
-      //TODO: Eliminar Valid Roles
+      // TODO: Eliminar Valid Roles
       if (roles.includes(role as ValidRoles)) {
         return user;
       }
