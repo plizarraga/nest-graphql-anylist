@@ -21,6 +21,9 @@
    npm run start:dev
    ```
 6. Visit the site:
+
    ```bash
    http://localhost:3000/graphql
    ```
+
+7. Execute the **'mutation'** executeSeed to populate the database with information."
