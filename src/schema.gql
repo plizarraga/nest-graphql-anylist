@@ -13,12 +13,30 @@ type User {
   lastUpdateBy: User
   itemCount: Int!
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
+  listCount: Int!
+  lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
 }
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type List {
+  id: ID!
+  name: String!
+  user: User!
+  items(offset: Int = 0, limit: Int = 10, search: String): [ListItem!]!
+  totalItems: Float!
+}
+
+type ListItem {
+  id: ID!
+  quantity: Float!
+  completed: Boolean!
+  list: List!
+  item: Item!
+}
 
 type Item {
   id: String!
@@ -27,6 +45,7 @@ type Item {
   createdAt: DateTime!
   updatedAt: DateTime!
   user: User!
+  listItem: [ListItem!]!
 }
 
 type AuthResponse {
@@ -39,6 +58,9 @@ type Query {
   item(id: ID!): Item!
   users(roles: [ValidRoles!] = []): [User!]!
   user(id: ID!): User!
+  lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
+  list(id: ID!): List!
+  listItem(id: String!): ListItem!
   revalidate: AuthResponse!
 }
 
@@ -55,6 +77,11 @@ type Mutation {
   removeItem(id: ID!): Item!
   updateUser(updateUserInput: UpdateUserInput!): User!
   blockUser(id: ID!): User!
+  createList(createListInput: CreateListInput!): List!
+  updateList(updateListInput: UpdateListInput!): List!
+  removeList(id: ID!): List!
+  createListItem(createListItemInput: CreateListItemInput!): ListItem!
+  updateListItem(updateListItemInput: UpdateListItemInput!): ListItem!
   signup(signupInput: SignupInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
 
@@ -80,6 +107,30 @@ input UpdateUserInput {
   id: ID!
   roles: [ValidRoles!]
   isActive: Boolean
+}
+
+input CreateListInput {
+  name: String!
+}
+
+input UpdateListInput {
+  name: String
+  id: ID!
+}
+
+input CreateListItemInput {
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID!
+  itemId: ID!
+}
+
+input UpdateListItemInput {
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID
+  itemId: ID
+  id: ID!
 }
 
 input SignupInput {
