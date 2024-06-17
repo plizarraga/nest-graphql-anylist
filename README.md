@@ -26,4 +26,4 @@
    http://localhost:3000/graphql
    ```
 
-7. Execute the **'mutation'** executeSeed to populate the database with information."
+7. Execute the **"mutation"** executeSeed to populate the database with information."
